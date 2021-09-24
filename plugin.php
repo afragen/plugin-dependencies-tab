@@ -13,7 +13,7 @@
  * Plugin URI: https://github.com/afragen/plugin-dependency
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen
- * Version: 0.1.0
+ * Version: 0.2.0
  * License: MIT
  * Network: true
  * Requires at least: 5.1
@@ -62,6 +62,9 @@ class WP_Plugin_Dependency_Installer {
 		add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
 		add_action( 'install_plugins_dependencies', array( $this, 'display_plugins_table' ), 10, 1 );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+		add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
+
 		$this->slugs = $this->sanitize_header_data();
 		$this->get_dot_org_data();
 	}
@@ -326,6 +329,27 @@ class WP_Plugin_Dependency_Installer {
 		$required = '<strong>' . __( 'Required by:' ) . '</strong>' . $required;
 
 		return '<p>' . $required . '</p>' . $description;
+	}
+
+	/**
+	 * Display admin notice if dependencies not installed.
+	 *
+	 * @return void
+	 */
+	public function admin_notices() {
+		$installed_slugs = array_map( 'dirname', array_keys( $this->plugins ) );
+		$intersect       = array_intersect( $this->slugs, $installed_slugs );
+		asort( $intersect );
+		if ( $intersect !== $this->slugs ) {
+			printf(
+				'<div class="notice-warning notice is-dismissible"><p>'
+				/* translators: 1: opening tag and link to Dependencies install page, 2: closing tag */
+				. esc_html__( 'There are additional plugin dependencies that must be installed. Go to the %1$sDependencies install page%2$s.' )
+				. '</p></div>',
+				'<a href=' . esc_url_raw( admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+				'</a>'
+			);
+		}
 	}
 }
 
