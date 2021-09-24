@@ -184,6 +184,7 @@ class WP_Plugin_Dependency_Installer {
 			$this->plugins[ $key ]['RequiredPlugins'] = $sanitized_slugs;
 			$all_slugs                                = array_merge( $all_slugs, $sanitized_slugs );
 		}
+		asort( $all_slugs );
 
 		return array_unique( $all_slugs );
 	}
@@ -211,6 +212,7 @@ class WP_Plugin_Dependency_Installer {
 			}
 
 			$this->plugin_data[ $response->slug ] = (array) $response;
+			asort( $this->plugin_data );
 		}
 	}
 
