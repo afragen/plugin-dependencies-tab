@@ -13,7 +13,7 @@
  * Plugin URI: https://github.com/afragen/plugin-dependency
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen
- * Version: 0.2.0
+ * Version: 0.3.0
  * License: MIT
  * Network: true
  * Requires at least: 5.1
@@ -51,7 +51,7 @@ class WP_Plugin_Dependency_Installer {
 	protected $plugin_data;
 
 	/**
-	 * Initialize.
+	 * Initialize, load filters, and get started.
 	 *
 	 * @return void
 	 */
@@ -65,7 +65,8 @@ class WP_Plugin_Dependency_Installer {
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 		add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
 
-		$this->slugs = $this->sanitize_header_data();
+		$required_headers = $this->parse_headers();
+		$this->slugs      = $this->sanitize_required_headers( $required_headers );
 		$this->get_dot_org_data();
 	}
 
@@ -158,27 +159,28 @@ class WP_Plugin_Dependency_Installer {
 		foreach ( array_keys( $this->plugins ) as $plugin ) {
 			$required_plugins = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, array( 'RequiredPlugins' => 'Required Plugins' ) );
 			if ( ! empty( $required_plugins['RequiredPlugins'] ) ) {
-				$plugin_data[ $plugin ] = $required_plugins;
+				$required_headers[ $plugin ] = $required_plugins;
 			}
 		}
 
-		return $plugin_data;
+		return $required_headers;
 	}
 
 	/**
 	 * Sanitize headers.
 	 *
+	 * @param array $required_headers Array of required plugin headers.
 	 * @return array
 	 */
-	public function sanitize_header_data() {
-		$plugin_data = $this->parse_headers();
-		$all_slugs   = array();
-		foreach ( $plugin_data as $key => $headers ) {
+	public function sanitize_required_headers( $required_headers ) {
+		$all_slugs = array();
+		foreach ( $required_headers as $key => $headers ) {
 			$sanitized_slugs = array();
 			$exploded        = explode( ',', $headers['RequiredPlugins'] );
 			foreach ( $exploded as $slug ) {
 				$slug = trim( $slug );
 
+				// Match to dot org slug format.
 				if ( preg_match( '/^[a-z0-9-]+$/', $slug ) ) {
 					$sanitized_slugs[] = $slug;
 				}
