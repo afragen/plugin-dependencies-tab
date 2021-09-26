@@ -28,7 +28,6 @@ namespace Fragen\Plugin_Dependency;
  */
 class WP_Plugin_Dependency_Installer {
 
-
 	/**
 	 * Holds `get_plugins()`.
 	 *
@@ -240,7 +239,7 @@ class WP_Plugin_Dependency_Installer {
 	private function modify_plugin_row( $plugin_file ) {
 		add_filter( 'network_admin_plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
 		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
-		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements' ) );
+		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements' ), 10, 2 );
 	}
 
 	/**
@@ -274,13 +273,14 @@ class WP_Plugin_Dependency_Installer {
 	 * Adds 'Required by: ...' information.
 	 *
 	 * @param string $plugin_file Plugin file.
+	 * @param array  $plugin_data Array of plugin data.
 	 *
 	 * @return void
 	 */
-	public function modify_plugin_row_elements( $plugin_file ) {
+	public function modify_plugin_row_elements( $plugin_file, $plugin_data ) {
 		if ( in_array( dirname( $plugin_file ), $this->slugs, true ) ) {
 			print '<script>';
-			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $this->get_dependency_sources( $plugin_file ) ) . '");';
+			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $this->get_dependency_sources( $plugin_data ) ) . '");';
 			print 'jQuery(".inactive[data-plugin=\'' . esc_attr( $plugin_file ) . '\']").attr("class", "active");';
 			print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
 			print '</script>';
@@ -290,17 +290,16 @@ class WP_Plugin_Dependency_Installer {
 	/**
 	 * Get formatted string of dependent plugins.
 	 *
-	 * @param string $plugin_file Plugin file.
+	 * @param array $plugin_data Array of plugin data.
 	 *
 	 * @return string $dependents
 	 */
-	private function get_dependency_sources( $plugin_file ) {
+	private function get_dependency_sources( $plugin_data ) {
 		$sources = array();
-		$slug    = strpos( $plugin_file, '/' ) ? dirname( $plugin_file ) : $plugin_file;
 		foreach ( $this->plugins as $plugin ) {
 			if ( isset( $plugin['RequiredPlugins'] ) ) {
 				foreach ( $plugin['RequiredPlugins'] as $dependent ) {
-					if ( isset( $this->plugin_data[ $dependent ] ) && in_array( $slug, $plugin['RequiredPlugins'], true ) ) {
+					if ( isset( $this->plugin_data[ $dependent ] ) && in_array( $plugin_data['slug'], $plugin['RequiredPlugins'], true ) ) {
 						$sources[] = $plugin['Name'];
 					}
 				}
@@ -323,7 +322,7 @@ class WP_Plugin_Dependency_Installer {
 	 */
 	public function plugin_install_description( $description, $plugin ) {
 		$required   = '';
-		$dependents = $this->get_dependency_sources( $plugin['slug'] );
+		$dependents = $this->get_dependency_sources( $plugin );
 		$dependents = explode( ',', $dependents );
 		foreach ( $dependents as $dependent ) {
 			$required .= '<br>' . $dependent;
@@ -345,9 +344,9 @@ class WP_Plugin_Dependency_Installer {
 		if ( $intersect !== $this->slugs ) {
 			printf(
 				'<div class="notice-warning notice is-dismissible"><p>'
-				/* translators: 1: opening tag and link to Dependencies install page, 2: closing tag */
-				. esc_html__( 'There are additional plugins that must be installed. Go to the %1$sDependencies%2$s install page.' )
-				. '</p></div>',
+					/* translators: 1: opening tag and link to Dependencies install page, 2: closing tag */
+					. esc_html__( 'There are additional plugins that must be installed. Go to the %1$sDependencies%2$s install page.' )
+					. '</p></div>',
 				'<a href=' . esc_url_raw( admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 				'</a>'
 			);
