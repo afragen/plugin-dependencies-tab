@@ -13,7 +13,7 @@
  * Plugin URI: https://github.com/afragen/plugin-dependency
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen
- * Version: 0.3.0
+ * Version: 0.4.0
  * License: MIT
  * Network: true
  * Requires at least: 5.1
@@ -93,7 +93,7 @@ class WP_Plugin_Dependency_Installer {
 		$args = array(
 			'page'     => 1,
 			'per_page' => 36,
-			'locale'   => \get_user_locale(),
+			'locale'   => get_user_locale(),
 			'browse'   => 'dependencies',
 		);
 
@@ -131,7 +131,7 @@ class WP_Plugin_Dependency_Installer {
 	 * @return void
 	 */
 	public function display_plugins_table( $paged ) {
-		\display_plugins_table();
+		display_plugins_table();
 	}
 
 	/**
@@ -184,7 +184,7 @@ class WP_Plugin_Dependency_Installer {
 					$sanitized_slugs[] = $slug;
 				}
 			}
-			$sanitized_slugs                          = \array_unique( $sanitized_slugs );
+			$sanitized_slugs                          = array_unique( $sanitized_slugs );
 			$this->plugins[ $key ]['RequiredPlugins'] = $sanitized_slugs;
 			$all_slugs                                = array_merge( $all_slugs, $sanitized_slugs );
 		}
@@ -200,7 +200,7 @@ class WP_Plugin_Dependency_Installer {
 	private function get_dot_org_data() {
 		foreach ( $this->slugs as $slug ) {
 			if ( ! function_exists( 'plugins_api' ) ) {
-				require_once \ABSPATH . 'wp-admin/includes/plugin-install.php';
+				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 			}
 			$args = array(
 				'slug'   => $slug,
@@ -211,7 +211,7 @@ class WP_Plugin_Dependency_Installer {
 
 			);
 			$response = plugins_api( 'plugin_information', $args );
-			if ( \is_wp_error( $response ) ) {
+			if ( is_wp_error( $response ) ) {
 				continue;
 			}
 
@@ -226,7 +226,7 @@ class WP_Plugin_Dependency_Installer {
 	 * @return void
 	 */
 	public function admin_init() {
-		foreach ( \array_keys( $this->plugins ) as $plugin_file ) {
+		foreach ( array_keys( $this->plugins ) as $plugin_file ) {
 			$this->modify_plugin_row( $plugin_file );
 		}
 	}
@@ -302,7 +302,7 @@ class WP_Plugin_Dependency_Installer {
 				}
 			}
 		}
-		$sources = \array_unique( $sources );
+		$sources = array_unique( $sources );
 		asort( $sources );
 		$sources = implode( ', ', $sources );
 
