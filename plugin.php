@@ -294,7 +294,7 @@ class WP_Plugin_Dependency_Installer {
 	private function get_dependency_sources( $plugin_data ) {
 		$sources = array();
 		foreach ( $this->plugins as $plugin ) {
-			if ( isset( $plugin['RequiredPlugins'] ) ) {
+			if ( ! empty( $plugin['RequiredPlugins'] ) ) {
 				foreach ( $plugin['RequiredPlugins'] as $dependent ) {
 					if ( isset( $this->plugin_data[ $dependent ] ) && in_array( $plugin_data['slug'], $plugin['RequiredPlugins'], true ) ) {
 						$sources[] = $plugin['Name'];
