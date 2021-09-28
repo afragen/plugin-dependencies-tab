@@ -318,15 +318,19 @@ class WP_Plugin_Dependency_Installer {
 	 * @return string
 	 */
 	public function plugin_install_description( $description, $plugin ) {
-		$required   = '';
+		$required   = null;
 		$dependents = $this->get_dependency_sources( $plugin );
-		$dependents = explode( ',', $dependents );
-		foreach ( $dependents as $dependent ) {
-			$required .= '<br>' . $dependent;
-		}
-		$required = '<strong>' . __( 'Required by:' ) . '</strong>' . $required;
+		if ( ! empty( $dependents ) ) {
+			$dependents = explode( ',', $dependents );
+			foreach ( $dependents as $dependent ) {
+				$required .= '<br>' . $dependent;
+			}
+			$required = '<strong>' . __( 'Required by:' ) . '</strong>' . $required;
 
-		return '<p>' . $required . '</p>' . $description;
+			$description = '<p>' . $required . '</p>' . $description;
+		}
+
+		return $description;
 	}
 
 	/**
