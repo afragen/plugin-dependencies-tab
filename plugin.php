@@ -57,9 +57,10 @@ class WP_Plugin_Dependencies {
 	public function init() {
 		add_filter( 'install_plugins_tabs', array( $this, 'add_install_tab' ), 10, 1 );
 		add_filter( 'install_plugins_table_api_args_dependencies', array( $this, 'add_install_dependency_args' ), 10, 1 );
+		add_action( 'install_plugins_dependencies', array( $this, 'display_plugins_table' ), 10, 1 );
+
 		add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
 		add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
-		add_action( 'install_plugins_dependencies', array( $this, 'display_plugins_table' ), 10, 1 );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 		add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
