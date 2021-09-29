@@ -24,9 +24,9 @@
 namespace Fragen\Plugin_Dependency;
 
 /**
- * Class WP_Plugin_Dependency_Installer
+ * Class WP_Plugin_Dependencies
  */
-class WP_Plugin_Dependency_Installer {
+class WP_Plugin_Dependencies {
 
 	/**
 	 * Holds `get_plugins()`.
@@ -355,4 +355,4 @@ class WP_Plugin_Dependency_Installer {
 	}
 }
 
-( new WP_Plugin_Dependency_Installer() )->init();
+( new WP_Plugin_Dependencies() )->init();
