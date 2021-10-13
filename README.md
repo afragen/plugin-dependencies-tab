@@ -1,7 +1,7 @@
-# Plugin Dependency
+# Plugin Dependencies Tab
 
- * Plugin Name: Plugin Dependency
- * Plugin URI: https://github.com/afragen/plugin-dependency
+ * Plugin Name: Plugin Dependencies Tab
+ * Plugin URI: https://github.com/afragen/plugin-dependencies-tab
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen
  * License: MIT

@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Dependency
+ * Plugin Dependencies Tab
  *
  * @author  Andy Fragen
  * @license MIT
- * @link    https://github.com/afragen/plugin-dependency
+ * @link    https://github.com/afragen/plugin-dependencies-tab
  * @package plugin-dependency
  */
 
 /**
  * Plugin Name: Plugin Dependency
- * Plugin URI: https://github.com/afragen/plugin-dependency
+ * Plugin URI: https://github.com/afragen/plugin-dependencies-tab
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen
  * Version: 0.5.0
@@ -18,7 +18,7 @@
  * Network: true
  * Requires at least: 5.1
  * Requires PHP: 5.6
- * GitHub Plugin URI: afragen/plugin-dependency
+ * GitHub Plugin URI: afragen/plugin-dependencies-tab
  */
 
 namespace Fragen\Plugin_Dependencies;
