@@ -5,15 +5,15 @@
  * @author  Andy Fragen
  * @license MIT
  * @link    https://github.com/afragen/plugin-dependencies-tab
- * @package plugin-dependency
+ * @package plugin-dependencies-tab
  */
 
 /**
- * Plugin Name: Plugin Dependency
+ * Plugin Name: Plugin Dependencies Tab
  * Plugin URI: https://github.com/afragen/plugin-dependencies-tab
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen
- * Version: 0.6.0
+ * Version: 0.6.1
  * License: MIT
  * Network: true
  * Requires at least: 5.1
