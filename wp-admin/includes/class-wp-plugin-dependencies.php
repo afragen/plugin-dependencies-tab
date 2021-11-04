@@ -37,6 +37,13 @@ class WP_Plugin_Dependencies {
 	protected $plugin_data;
 
 	/**
+	 * Holds plugin filepath of plugins with dependencies.
+	 *
+	 * @var array
+	 */
+	protected $requires_plugins;
+
+	/**
 	 * Initialize, load filters, and get started.
 	 *
 	 * @return void
@@ -51,6 +58,7 @@ class WP_Plugin_Dependencies {
 		$required_headers = $this->parse_headers();
 		$this->slugs      = $this->sanitize_required_headers( $required_headers );
 		$this->get_dot_org_data();
+		$this->deactivate_unmet_dependencies();
 	}
 
 	/**
@@ -80,6 +88,7 @@ class WP_Plugin_Dependencies {
 			$requires_plugins = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
 			if ( ! empty( $requires_plugins['RequiresPlugins'] ) ) {
 				$required_headers[ $plugin ] = $requires_plugins;
+				$this->requires_plugins[]    = $plugin;
 			}
 		}
 
@@ -138,6 +147,64 @@ class WP_Plugin_Dependencies {
 			$this->plugin_data[ $response->slug ] = (array) $response;
 			asort( $this->plugin_data );
 		}
+	}
+
+	/**
+	 * Deactivate plugins with unmet dependencies.
+	 *
+	 * @return void
+	 */
+	public function deactivate_unmet_dependencies() {
+		$dependencies        = $this->get_dependency_data();
+		$deactivate_requires = array();
+
+		foreach ( $this->requires_plugins as $requires ) {
+			if ( array_key_exists( $requires, $this->plugins ) ) {
+				$plugin_dependencies = $this->plugins[ $requires ]['RequiresPlugins'];
+				foreach ( $plugin_dependencies as $plugin_dependency ) {
+					if ( is_plugin_active( $requires ) ) {
+						if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
+							$deactivate_requires[] = $requires;
+						}
+					}
+				}
+			}
+		}
+
+		deactivate_plugins( $deactivate_requires );
+		if ( ! empty( $deactivate_requires ) ) {
+			foreach ( $deactivate_requires as $deactivated ) {
+				$deactivated_plugins[] = $this->plugins[ $deactivated ]['Name'];
+			}
+			$deactivated_plugins = implode( ', ', $deactivated_plugins );
+			printf(
+				'<div class="notice-error notice is-dismissible"><p>'
+					/* translators: s: plugin names */
+					. esc_html__( '%s plugins(s) could not be activated. There are uninstalled or inactive dependencies.' )
+					. '</p></div>',
+				'<strong>' . esc_html( $deactivated_plugins ) . '</strong>'
+			);
+		}
+	}
+
+	/**
+	 * Get filepath of installed dependencies.
+	 *
+	 * @return array
+	 */
+	public function get_dependency_data() {
+		foreach ( array_keys( $this->plugins ) as $plugin ) {
+			foreach ( $this->slugs as $slug ) {
+				if ( false !== strpos( $plugin, $slug ) ) {
+					$dependencies[ $slug ] = $plugin;
+					break 2;
+				} else {
+					$dependencies[ $slug ] = false;
+				}
+			}
+		}
+
+		return $dependencies;
 	}
 
 	/**
