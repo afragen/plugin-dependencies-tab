@@ -171,6 +171,7 @@ class WP_Plugin_Dependencies {
 			}
 		}
 
+		$deactivate_requires = array_unique( $deactivate_requires );
 		deactivate_plugins( $deactivate_requires );
 		if ( ! empty( $deactivate_requires ) ) {
 			foreach ( $deactivate_requires as $deactivated ) {
