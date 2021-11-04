@@ -195,11 +195,12 @@ class WP_Plugin_Dependencies {
 	 * @return array
 	 */
 	public function get_dependency_paths() {
-		foreach ( array_keys( $this->plugins ) as $plugin ) {
-			foreach ( $this->slugs as $slug ) {
+		$dependencies = array();
+		foreach ( $this->slugs as $slug ) {
+			foreach ( array_keys( $this->plugins ) as $plugin ) {
 				if ( false !== strpos( $plugin, $slug ) ) {
 					$dependencies[ $slug ] = $plugin;
-					break 2;
+					break;
 				} else {
 					$dependencies[ $slug ] = false;
 				}
