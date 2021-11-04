@@ -155,7 +155,7 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function deactivate_unmet_dependencies() {
-		$dependencies        = $this->get_dependency_data();
+		$dependencies        = $this->get_dependency_paths();
 		$deactivate_requires = array();
 
 		foreach ( $this->requires_plugins as $requires ) {
@@ -189,10 +189,11 @@ class WP_Plugin_Dependencies {
 
 	/**
 	 * Get filepath of installed dependencies.
+	 * If dependency is not installed filepath defaults to false.
 	 *
 	 * @return array
 	 */
-	public function get_dependency_data() {
+	public function get_dependency_paths() {
 		foreach ( array_keys( $this->plugins ) as $plugin ) {
 			foreach ( $this->slugs as $slug ) {
 				if ( false !== strpos( $plugin, $slug ) ) {
