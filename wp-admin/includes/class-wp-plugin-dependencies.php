@@ -198,7 +198,7 @@ class WP_Plugin_Dependencies {
 		$dependencies = array();
 		foreach ( $this->slugs as $slug ) {
 			foreach ( array_keys( $this->plugins ) as $plugin ) {
-				if ( false !== strpos( $plugin, $slug ) ) {
+				if ( false !== strpos( $plugin, trailingslashit( $slug ) ) ) {
 					$dependencies[ $slug ] = $plugin;
 					break;
 				} else {
