@@ -16,6 +16,7 @@
 3. In the plugins page a dependent plugin is unable to be deleted or deactivated.
 A label designating a 'Required Plugin' is inserted as is data noting which plugins require the dependency.
 4. Displays an admin notice with link to **Plugins > Add New > Dependencies** if not all plugin dependencies have been installed.
+5. Ensures that plugins with unmet dependencies cannot be activated.
 
 Some of the messaging is too difficult to display without directly modifying core.
 
