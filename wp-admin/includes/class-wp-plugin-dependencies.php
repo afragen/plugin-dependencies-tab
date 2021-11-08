@@ -173,19 +173,9 @@ class WP_Plugin_Dependencies {
 
 		$deactivate_requires = array_unique( $deactivate_requires );
 		deactivate_plugins( $deactivate_requires );
-		if ( ! empty( $deactivate_requires ) ) {
-			foreach ( $deactivate_requires as $deactivated ) {
-				$deactivated_plugins[] = $this->plugins[ $deactivated ]['Name'];
-			}
-			$deactivated_plugins = implode( ', ', $deactivated_plugins );
-			printf(
-				'<div class="notice-error notice is-dismissible"><p>'
-					/* translators: s: plugin names */
-					. esc_html__( '%s plugins(s) could not be activated. There are uninstalled or inactive dependencies.' )
-					. '</p></div>',
-				'<strong>' . esc_html( $deactivated_plugins ) . '</strong>'
-			);
-		}
+		set_site_transient( 'wp_plugin_dependencies_deactivate_plugins', $deactivate_requires, 5 );
+		add_action( 'admin_notices', array( $this, 'deactivate_admin_notices' ) );
+		add_action( 'network_admin_notices', array( $this, 'deactivate_admin_notices' ) );
 	}
 
 	/**
@@ -208,6 +198,29 @@ class WP_Plugin_Dependencies {
 		}
 
 		return $dependencies;
+	}
+
+	/**
+	 * Display admin notice if plugins without active dependencies are activated.
+	 *
+	 * @return void
+	 */
+	public function deactivate_admin_notices() {
+		// Transient on a 5 second timeout.
+		$deactivate_requires = get_site_transient( 'wp_plugin_dependencies_deactivate_plugins', array() );
+		if ( ! empty( $deactivate_requires ) ) {
+			foreach ( $deactivate_requires as $deactivated ) {
+				$deactivated_plugins[] = $this->plugins[ $deactivated ]['Name'];
+			}
+			$deactivated_plugins = implode( ', ', $deactivated_plugins );
+			printf(
+				'<div class="notice-error notice is-dismissible"><p>'
+				/* translators: s: plugin names */
+				. esc_html__( '%s plugins(s) could not be activated. There are uninstalled or inactive dependencies.' )
+				. '</p></div>',
+				'<strong>' . esc_html( $deactivated_plugins ) . '</strong>'
+			);
+		}
 	}
 
 	/**

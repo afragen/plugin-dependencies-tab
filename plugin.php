@@ -13,7 +13,7 @@
  * Plugin URI: https://github.com/afragen/plugin-dependencies-tab
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen
- * Version: 0.7.0
+ * Version: 0.8.0
  * License: MIT
  * Network: true
  * Requires at least: 5.1
