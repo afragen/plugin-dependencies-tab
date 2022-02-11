@@ -95,12 +95,9 @@ class WP_Plugin_Dependencies {
 			$requires_plugins = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
 			if ( ! empty( $requires_plugins['RequiresPlugins'] ) ) {
 				$required_headers[ $plugin ] = $requires_plugins;
-				$sanitized_requires_slugs    = $this->sanitize_required_headers( $required_headers );
-				foreach ( array_keys( $this->plugins )as $plugin_path ) {
-					if ( in_array( dirname( $plugin_path ), $sanitized_requires_slugs, true ) ) {
-						$this->requires_plugins[ $plugin ][ dirname( $plugin_path ) ][] = $plugin_path;
-					}
-				}
+				$sanitized_requires_slugs    = implode( ', ', $this->sanitize_required_headers( $required_headers ) );
+
+				$this->requires_plugins[ $plugin ]['RequiresPlugins'] = $sanitized_requires_slugs;
 			}
 		}
 
@@ -170,12 +167,12 @@ class WP_Plugin_Dependencies {
 		$dependencies        = $this->get_dependency_paths();
 		$deactivate_requires = array();
 
-		foreach ( $this->requires_plugins as $requires => $dependencies ) {
+		foreach ( array_keys( $this->requires_plugins ) as $requires ) {
 			if ( array_key_exists( $requires, $this->plugins ) ) {
 				$plugin_dependencies = $this->plugins[ $requires ]['RequiresPlugins'];
 				foreach ( $plugin_dependencies as $plugin_dependency ) {
 					if ( is_plugin_active( $requires ) ) {
-						if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ][0] ) ) {
+						if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
 							$deactivate_requires[] = $requires;
 						}
 					}
@@ -331,7 +328,8 @@ class WP_Plugin_Dependencies {
 	public function unset_action_links( $actions, $plugin_file ) {
 		if ( in_array( dirname( $plugin_file ), $this->slugs, true ) ) {
 			foreach ( $this->requires_plugins as $plugin => $requires ) {
-				if ( is_plugin_active( $plugin ) && in_array( dirname( $plugin_file ), array_keys( $requires ), true ) ) {
+				$dependents = explode( ',', $requires['RequiresPlugins'] );
+				if ( is_plugin_active( $plugin ) && in_array( dirname( $plugin_file ), $dependents, true ) ) {
 					if ( isset( $actions['delete'] ) ) {
 						unset( $actions['delete'] );
 					}
