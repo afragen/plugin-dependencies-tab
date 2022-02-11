@@ -293,16 +293,18 @@ class WP_Plugin_Dependencies {
 			$deactivated_plugins = implode( ', ', $deactivated_plugins );
 			printf(
 				'<div class="notice-error notice is-dismissible"><p>'
-				/* translators: s: plugin names */
-				. esc_html__( '%s plugins(s) could not be activated. There are uninstalled or inactive dependencies.' )
+				/* translators: 1: plugin names, 2: opening tag and link to Dependencies install page, 3: closing tag */
+				. esc_html__( '%1$s plugin(s) could not be activated. There are uninstalled or inactive dependencies. Go to the %2$sDependencies%3$s install page.' )
 				. '</p></div>',
-				'<strong>' . esc_html( $deactivated_plugins ) . '</strong>'
+				'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
+				'<a href=' . esc_url_raw( admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+				'</a>'
 			);
 		}
 	}
 
 	/**
-	 * Acutally make modifications to plugin row.
+	 * Actually make modifications to plugin row.
 	 *
 	 * @param string $plugin_file Plugin file.
 	 */
