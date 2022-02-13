@@ -211,10 +211,13 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function admin_init() {
-		foreach ( array_keys( $this->plugins ) as $plugin_file ) {
+		$dependency_paths = $this->get_dependency_filepaths();
+		foreach ( $dependency_paths as $plugin_file ) {
+			if ( $plugin_file ) {
 				$this->modify_plugin_row( $plugin_file );
 			}
 		}
+	}
 
 	/**
 	 * Get plugin data from WordPress API.
@@ -263,7 +266,6 @@ class WP_Plugin_Dependencies {
 	 * @return array
 	 */
 	public function unset_action_links( $actions, $plugin_file ) {
-		if ( in_array( dirname( $plugin_file ), $this->slugs, true ) ) {
 		foreach ( $this->requires_plugins as $plugin => $requires ) {
 			$dependents = explode( ',', $requires['RequiresPlugins'] );
 			if ( is_plugin_active( $plugin ) && in_array( dirname( $plugin_file ), $dependents, true ) ) {
@@ -272,7 +274,6 @@ class WP_Plugin_Dependencies {
 				}
 				if ( isset( $actions['deactivate'] ) ) {
 					unset( $actions['deactivate'] );
-					}
 				}
 			}
 		}
@@ -291,7 +292,6 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_plugin_row_elements( $plugin_file, $plugin_data ) {
-		if ( in_array( dirname( $plugin_file ), $this->slugs, true ) ) {
 		print '<script>';
 		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $this->get_dependency_sources( $plugin_data ) ) . '");';
 		print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
