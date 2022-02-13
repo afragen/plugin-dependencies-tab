@@ -133,38 +133,12 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
-	 * Get plugin data from WordPress API.
-	 * Store result in $this->plugin_data.
-	 */
-	private function get_dot_org_data() {
-		foreach ( $this->slugs as $slug ) {
-			if ( ! function_exists( 'plugins_api' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-			}
-			$args     = array(
-				'slug'   => $slug,
-				'fields' => array(
-					'short_description' => true,
-					'icons'             => true,
-				),
-			);
-			$response = plugins_api( 'plugin_information', $args );
-			if ( is_wp_error( $response ) ) {
-				continue;
-			}
-
-			$this->plugin_data[ $response->slug ] = (array) $response;
-			asort( $this->plugin_data );
-		}
-	}
-
-	/**
 	 * Deactivate plugins with unmet dependencies.
 	 *
 	 * @return void
 	 */
 	public function deactivate_unmet_dependencies() {
-		$dependencies        = $this->get_dependency_paths();
+		$dependencies        = $this->get_dependency_filepaths();
 		$deactivate_requires = array();
 
 		foreach ( array_keys( $this->requires_plugins ) as $requires ) {
@@ -183,28 +157,6 @@ class WP_Plugin_Dependencies {
 		$deactivate_requires = array_unique( $deactivate_requires );
 		deactivate_plugins( $deactivate_requires );
 		set_site_transient( 'wp_plugin_dependencies_deactivate_plugins', $deactivate_requires, 10 );
-	}
-
-	/**
-	 * Get filepath of installed dependencies.
-	 * If dependency is not installed filepath defaults to false.
-	 *
-	 * @return array
-	 */
-	public function get_dependency_paths() {
-		$dependencies = array();
-		foreach ( $this->slugs as $slug ) {
-			foreach ( array_keys( $this->plugins ) as $plugin ) {
-				if ( false !== strpos( $plugin, trailingslashit( $slug ) ) ) {
-					$dependencies[ $slug ] = $plugin;
-					break;
-				} else {
-					$dependencies[ $slug ] = false;
-				}
-			}
-		}
-
-		return $dependencies;
 	}
 
 	/**
@@ -260,8 +212,90 @@ class WP_Plugin_Dependencies {
 	 */
 	public function admin_init() {
 		foreach ( array_keys( $this->plugins ) as $plugin_file ) {
-			$this->modify_plugin_row( $plugin_file );
+				$this->modify_plugin_row( $plugin_file );
+			}
 		}
+
+	/**
+	 * Get plugin data from WordPress API.
+	 * Store result in $this->plugin_data.
+	 */
+	private function get_dot_org_data() {
+		foreach ( $this->slugs as $slug ) {
+			if ( ! function_exists( 'plugins_api' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+			}
+			$args     = array(
+				'slug'   => $slug,
+				'fields' => array(
+					'short_description' => true,
+					'icons'             => true,
+				),
+			);
+			$response = plugins_api( 'plugin_information', $args );
+			if ( is_wp_error( $response ) ) {
+				continue;
+			}
+
+			$this->plugin_data[ $response->slug ] = (array) $response;
+			asort( $this->plugin_data );
+		}
+	}
+
+	/**
+	 * Actually make modifications to plugin row.
+	 *
+	 * @param string $plugin_file Plugin file.
+	 */
+	private function modify_plugin_row( $plugin_file ) {
+		add_filter( 'network_admin_plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
+		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
+		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements' ), 10, 2 );
+	}
+
+	/**
+	 * Unset plugin action links so required plugins can't be removed or deactivated.
+	 * Only when the requiring plugin is active.
+	 *
+	 * @param array  $actions     Action links.
+	 * @param string $plugin_file Plugin file.
+	 *
+	 * @return array
+	 */
+	public function unset_action_links( $actions, $plugin_file ) {
+		if ( in_array( dirname( $plugin_file ), $this->slugs, true ) ) {
+		foreach ( $this->requires_plugins as $plugin => $requires ) {
+			$dependents = explode( ',', $requires['RequiresPlugins'] );
+			if ( is_plugin_active( $plugin ) && in_array( dirname( $plugin_file ), $dependents, true ) ) {
+				if ( isset( $actions['delete'] ) ) {
+					unset( $actions['delete'] );
+				}
+				if ( isset( $actions['deactivate'] ) ) {
+					unset( $actions['deactivate'] );
+					}
+				}
+			}
+		}
+
+		return $actions;
+	}
+
+	/**
+	 * Modify the plugin row elements.
+	 * Removes plugin row checkbox.
+	 * Adds 'Required by: ...' information.
+	 *
+	 * @param string $plugin_file Plugin file.
+	 * @param array  $plugin_data Array of plugin data.
+	 *
+	 * @return void
+	 */
+	public function modify_plugin_row_elements( $plugin_file, $plugin_data ) {
+		if ( in_array( dirname( $plugin_file ), $this->slugs, true ) ) {
+		print '<script>';
+		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $this->get_dependency_sources( $plugin_data ) ) . '");';
+		print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
+		print '</script>';
 	}
 
 	/**
@@ -306,62 +340,26 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
-	 * Actually make modifications to plugin row.
-	 *
-	 * @param string $plugin_file Plugin file.
-	 */
-	private function modify_plugin_row( $plugin_file ) {
-		add_filter( 'network_admin_plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
-		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
-		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements' ), 10, 2 );
-	}
-
-	/**
-	 * Unset plugin action links so required plugins can't be removed or deactivated.
-	 * Only when the requiring plugin is active.
-	 *
-	 * @param array  $actions     Action links.
-	 * @param string $plugin_file Plugin file.
+	 * Get filepath of installed dependencies.
+	 * If dependency is not installed filepath defaults to false.
 	 *
 	 * @return array
 	 */
-	public function unset_action_links( $actions, $plugin_file ) {
-		if ( in_array( dirname( $plugin_file ), $this->slugs, true ) ) {
-			foreach ( $this->requires_plugins as $plugin => $requires ) {
-				$dependents = explode( ',', $requires['RequiresPlugins'] );
-				if ( is_plugin_active( $plugin ) && in_array( dirname( $plugin_file ), $dependents, true ) ) {
-					if ( isset( $actions['delete'] ) ) {
-						unset( $actions['delete'] );
-					}
-					if ( isset( $actions['deactivate'] ) ) {
-						unset( $actions['deactivate'] );
-					}
+	private function get_dependency_filepaths() {
+		$dependencies = array();
+		foreach ( $this->slugs as $slug ) {
+			foreach ( array_keys( $this->plugins ) as $plugin ) {
+				if ( false !== strpos( $plugin, trailingslashit( $slug ) ) ) {
+					$dependencies[ $slug ] = $plugin;
+					break;
+				} else {
+					$dependencies[ $slug ] = false;
 				}
 			}
 		}
 
-		return $actions;
+		return $dependencies;
 	}
-
-	/**
-	 * Modify the plugin row elements.
-	 * Removes plugin row checkbox.
-	 * Adds 'Required by: ...' information.
-	 *
-	 * @param string $plugin_file Plugin file.
-	 * @param array  $plugin_data Array of plugin data.
-	 *
-	 * @return void
-	 */
-	public function modify_plugin_row_elements( $plugin_file, $plugin_data ) {
-		if ( in_array( dirname( $plugin_file ), $this->slugs, true ) ) {
-			print '<script>';
-			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $this->get_dependency_sources( $plugin_data ) ) . '");';
-			print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
-			print '</script>';
-		}
-	}
-
 	/**
 	 * Get formatted string of dependent plugins.
 	 *
