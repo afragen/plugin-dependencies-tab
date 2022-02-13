@@ -241,8 +241,8 @@ class WP_Plugin_Dependencies {
 			}
 
 			$this->plugin_data[ $response->slug ] = (array) $response;
-			asort( $this->plugin_data );
 		}
+		asort( $this->plugin_data );
 	}
 
 	/**
@@ -250,7 +250,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @param string $plugin_file Plugin file.
 	 */
-	private function modify_plugin_row( $plugin_file ) {
+	public function modify_plugin_row( $plugin_file ) {
 		add_filter( 'network_admin_plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
 		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
 		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements' ), 10, 2 );
