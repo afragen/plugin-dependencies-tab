@@ -360,6 +360,7 @@ class WP_Plugin_Dependencies {
 
 		return $dependencies;
 	}
+
 	/**
 	 * Get formatted string of dependent plugins.
 	 *
