@@ -223,7 +223,7 @@ class WP_Plugin_Dependencies {
 	 * Get plugin data from WordPress API.
 	 * Store result in $this->plugin_data.
 	 */
-	private function get_dot_org_data() {
+	public function get_dot_org_data() {
 		foreach ( $this->slugs as $slug ) {
 			if ( ! function_exists( 'plugins_api' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
