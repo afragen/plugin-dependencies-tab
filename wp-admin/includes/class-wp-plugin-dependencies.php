@@ -16,7 +16,7 @@
 class WP_Plugin_Dependencies {
 
 	/**
-	 * Holds `get_plugins()`.
+	 * Holds 'get_plugins()'.
 	 *
 	 * @var array
 	 */
@@ -30,7 +30,7 @@ class WP_Plugin_Dependencies {
 	protected $slugs;
 
 	/**
-	 * Holds plugin data for plugin dependencies.
+	 * Holds 'plugins_api()' data for plugin dependencies.
 	 *
 	 * @var array
 	 */
@@ -162,9 +162,9 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Modify plugins_api() response.
 	 *
-	 * @param \stdClas  $res Object of results.
+	 * @param \stdClas  $res    Object of results.
 	 * @param string    $action Variable for plugins_api().
-	 * @param \stdClass $args Object of plugins_api() args.
+	 * @param \stdClass $args   Object of plugins_api() args.
 	 *
 	 * @return \stdClass
 	 */
@@ -366,7 +366,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @param array $plugin_data Array of plugin data.
 	 *
-	 * @return string $dependents
+	 * @return string
 	 */
 	private function get_dependency_sources( $plugin_data ) {
 		$sources = array();
