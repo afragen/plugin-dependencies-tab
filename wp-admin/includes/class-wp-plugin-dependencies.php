@@ -48,6 +48,7 @@ class WP_Plugin_Dependencies {
 	 */
 	public function __construct() {
 		$this->requires_plugins = array();
+		$this->plugin_data      = array();
 	}
 
 	/**
