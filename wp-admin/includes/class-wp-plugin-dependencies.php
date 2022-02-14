@@ -346,19 +346,19 @@ class WP_Plugin_Dependencies {
 	 * @return array
 	 */
 	private function get_dependency_filepaths() {
-		$dependencies = array();
+		$dependency_filepaths = array();
 		foreach ( $this->slugs as $slug ) {
 			foreach ( array_keys( $this->plugins ) as $plugin ) {
 				if ( false !== strpos( $plugin, trailingslashit( $slug ) ) ) {
-					$dependencies[ $slug ] = $plugin;
+					$dependency_filepaths[ $slug ] = $plugin;
 					break;
 				} else {
-					$dependencies[ $slug ] = false;
+					$dependency_filepaths[ $slug ] = false;
 				}
 			}
 		}
 
-		return $dependencies;
+		return $dependency_filepaths;
 	}
 
 	/**
