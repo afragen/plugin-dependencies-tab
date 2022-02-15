@@ -128,9 +128,10 @@ class WP_Plugin_Dependencies {
 			$this->plugins[ $key ]['RequiresPlugins'] = $sanitized_slugs;
 			$all_slugs                                = array_merge( $all_slugs, $sanitized_slugs );
 		}
-		asort( $all_slugs );
+		$all_slugs = array_unique( $all_slugs );
+		sort( $all_slugs );
 
-		return array_unique( $all_slugs );
+		return $all_slugs;
 	}
 
 	/**
@@ -381,7 +382,7 @@ class WP_Plugin_Dependencies {
 			}
 		}
 		$sources = array_unique( $sources );
-		asort( $sources );
+		sort( $sources );
 		$sources = implode( ', ', $sources );
 
 		return $sources;
