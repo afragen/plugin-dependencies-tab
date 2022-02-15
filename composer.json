@@ -1,0 +1,22 @@
+{
+  "name": "afragen/plugin-dependencies-tab",
+  "description": "Add Bitbucket repositories to GitHub Updater that lack actual GitHub Updater headers.",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andy Fragen",
+      "email": "andy@thefragens.com",
+      "homepage": "https://thefragens.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/afragen/plugin-dependencies-tab/issues",
+    "source": "https://github.com/afragen/plugin-dependencies-tab"
+  },
+  "prefer-stable": true,
+  "require": {
+    "php": ">=5.6"
+  }
+}
