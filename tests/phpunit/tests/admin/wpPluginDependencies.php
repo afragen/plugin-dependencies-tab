@@ -22,7 +22,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	public function test_slug_sanitization( $requires_plugins, $expected ) {
 		$headers = array( 'test-plugin' => array( 'RequiresPlugins' => $requires_plugins ) );
 		$actual  = ( new Dependencies() )->sanitize_required_headers( $headers );
-		$this->assertSame( $expected, $actual );
+		$this->assertSameSetsWithIndex( $expected, $actual );
 	}
 
 	/**
