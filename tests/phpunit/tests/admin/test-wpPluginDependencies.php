@@ -1,26 +1,17 @@
 <?php
 
 /**
- * Class PluginDependencies
+ * Unit tests for  `class WP_Plugin_Dependencies`.
  *
- * @package Plugin_Dependencies_Tab
+ * group: admin
  */
 
 use WP_Plugin_Dependencies as Dependencies;
 
 /**
- * Sample test case.
+ * Testing for class WP_Plugin_Dependencies.
  */
-class wpPluginDependencies extends WP_UnitTestCase {
-
-
-	/**
-	 * A single example test.
-	 */
-	public function test_sample() {
-		 // Replace this with some actual testing code.
-		$this->assertTrue( true );
-	}
+class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 	/**
 	 * Test data.
@@ -32,7 +23,7 @@ class wpPluginDependencies extends WP_UnitTestCase {
 			array( array( 'test' => array( 'RequiresPlugins' => 'hello-dolly' ) ), array( 'hello-dolly' ) ),
 			array( array( 'test2' => array( 'RequiresPlugins' => 'hello-dolly, woocommerce' ) ), array( 'hello-dolly', 'woocommerce' ) ),
 			array( array( 'test3' => array( 'RequiresPlugins' => 'woocommerce, hello-dolly' ) ), array( 'hello-dolly', 'woocommerce' ) ),
-			array( array( 'test4' => array( 'RequiresPlugins' => 'hello-dolly,gutenberg,  "junk-list , here for test", 435_bad' ) ), array( 'gutenberg', 'hello-dolly' ) ),
+			array( array( 'test4' => array( 'RequiresPlugins' => 'hello-dolly,gutenberg,  junk-list , "here for test", 435_bad' ) ), array( 'gutenberg', 'hello-dolly', 'junk-list' ) ),
 		);
 	}
 
