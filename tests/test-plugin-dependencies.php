@@ -40,7 +40,8 @@ class PluginDependencies extends WP_UnitTestCase
 	 */
 	public function test_slug_sanitization($headers, $expected)
 	{
-		$actual = (new Dependencies)->sanitize_required_headers($headers);
+		$actual = (new Dependencies())->sanitize_required_headers($headers);
 		$this->assertSame($expected, $actual);
 	}
+
 }
