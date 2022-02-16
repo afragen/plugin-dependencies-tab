@@ -11,7 +11,7 @@ use WP_Plugin_Dependencies as Dependencies;
 /**
  * Sample test case.
  */
-class PluginDependencies extends WP_UnitTestCase
+class wpPluginDependencies extends WP_UnitTestCase
 {
 
 	/**
