@@ -9,7 +9,7 @@
 	>
 	<testsuites>
 		<testsuite name="plugin-dependencies-tab">
-			<directory prefix="test-" suffix=".php">./tests/</directory>
+			<directory suffix=".php">./tests/</directory>
 			<exclude>./tests/test-sample.php</exclude>
 		</testsuite>
 	</testsuites>
