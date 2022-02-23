@@ -57,16 +57,18 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function init() {
-		add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
-		add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
-		add_action( 'admin_init', array( $this, 'admin_init' ) );
-		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-		add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
+		if ( is_admin() ) {
+			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
+			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
+			add_action( 'admin_init', array( $this, 'admin_init' ) );
+			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
 
-		$required_headers = $this->parse_headers();
-		$this->slugs      = $this->sanitize_required_headers( $required_headers );
-		$this->get_dot_org_data();
-		$this->deactivate_unmet_dependencies();
+			$required_headers = $this->parse_headers();
+			$this->slugs      = $this->sanitize_required_headers( $required_headers );
+			$this->get_dot_org_data();
+			$this->deactivate_unmet_dependencies();
+		}
 	}
 
 	/**
@@ -213,6 +215,11 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function admin_init() {
+		global $pagenow;
+		if ( 'plugins.php' !== $pagenow ) {
+			return;
+		}
+
 		$dependency_paths = $this->get_dependency_filepaths();
 		foreach ( $dependency_paths as $plugin_file ) {
 			if ( $plugin_file ) {
@@ -226,6 +233,11 @@ class WP_Plugin_Dependencies {
 	 * Store result in $this->plugin_data.
 	 */
 	public function get_dot_org_data() {
+		global $pagenow;
+		if ( 'plugin-install.php' !== $pagenow ) {
+			return;
+		}
+
 		foreach ( $this->slugs as $slug ) {
 			if ( ! function_exists( 'plugins_api' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
