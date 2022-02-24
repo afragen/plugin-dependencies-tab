@@ -23,5 +23,5 @@ Some of the messaging is too difficult to display without directly modifying cor
 
 ## Need to add to core
 
-* Add filter hook to wp-admin/includes/class-wp-plugin-install-list-table.php:514
+* Add filter hook after wp-admin/includes/class-wp-plugin-install-list-table.php:516
   * `$description = apply_filters( 'plugin_install_description', $description, $plugin );`
