@@ -238,7 +238,12 @@ class WP_Plugin_Dependencies {
 			return;
 		}
 
-		foreach ( $this->slugs as $slug ) {
+		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data', array() );
+		foreach ( $this->slugs as $key => $slug ) {
+			// Don't hit plugins API if data exists.
+			if ( array_key_exists( $slug, $this->plugin_data ) ) {
+				continue;
+			}
 			if ( ! function_exists( 'plugins_api' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 			}
@@ -255,8 +260,22 @@ class WP_Plugin_Dependencies {
 			}
 
 			$this->plugin_data[ $response->slug ] = (array) $response;
+
+			if ( ! in_array( $slug, $this->slugs, true ) ) {
+				unset( $this->plugin_data[ $key ] );
+			}
 		}
+
+		// Remove from $this->plugin_data if slug no longer a dependency.
+		$differences = array_diff( array_keys( $this->plugin_data ), $this->slugs );
+		if ( ! empty( $differences ) ) {
+			foreach ( $differences as $difference ) {
+				unset( $this->plugin_data[ $difference ] );
+			}
+		}
+
 		asort( $this->plugin_data );
+		set_site_transient( 'wp_plugin_dependencies_plugin_data', $this->plugin_data, 12 * HOUR_IN_SECONDS );
 	}
 
 	/**
