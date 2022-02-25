@@ -57,7 +57,7 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function init() {
-		if ( is_admin() ) {
+		if ( is_admin() && ! wp_doing_ajax() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
