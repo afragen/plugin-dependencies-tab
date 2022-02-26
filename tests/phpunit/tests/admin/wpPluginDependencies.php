@@ -22,7 +22,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 	/**
 	 * Helper method.
-	 * 
+	 *
 	 * This creates a single-file plugin.
 	 *
 	 * @access private
@@ -53,7 +53,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 	/**
 	 * Helper method.
-	 * 
+	 *
 	 * This makes a class property accessible.
 	 *
 	 * @param object|string $obj_or_class The object or class.
@@ -62,7 +62,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 */
 	private function make_prop_accessible( $obj_or_class, $prop ) {
 		$property = new ReflectionProperty( $obj_or_class, $prop );
-		$property->setAccessible(true);
+		$property->setAccessible( true );
 		return $property;
 	}
 
@@ -75,10 +75,10 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		$plugin_data      = $this->make_prop_accessible( $dependencies, 'plugin_data' );
 
 		$actual = $requires_plugins->getValue( $dependencies );
-		
+
 		$this->assertIsArray( $actual, '$requires_plugins is not an array' );
 		$this->assertEmpty( $actual, '$requires_plugins is not empty' );
-		
+
 		$actual = $plugin_data->getValue( $dependencies );
 
 		$this->assertIsArray( $actual, '$plugin_data is not an array' );
@@ -98,7 +98,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @dataProvider data_parse_headers
 	 *
 	 * @covers WP_Plugin_Dependencies::parse_headers
-	 * 
+	 *
 	 * @param array    $headers .
 	 * @param stdClass $expected     The expected parsed headers.
 	 */
@@ -145,109 +145,109 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 	/**
 	 * Data Provider.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function data_parse_headers() {
 		return array(
-			'no dependencies'                         => array(
+			'no dependencies'                        => array(
 				'plugins_data' => array(
 					'test-plugin' => array(
 						'Plugin Name' => 'Test Plugin',
 					),
 				),
-				'expected' => array(),
+				'expected'     => array(),
 			),
 			'one dependency'                         => array(
 				'plugins_data' => array(
 					'test-plugin' => array(
-						'Plugin Name' => 'Test Plugin',
+						'Plugin Name'      => 'Test Plugin',
 						'Requires Plugins' => 'hello-dolly',
 					),
 				),
-				'expected' => array(
+				'expected'     => array(
 					'RequiresPlugins' => 'hello-dolly',
 				),
 			),
 			'two dependencies in alphabetical order' => array(
 				'plugins_data' => array(
 					'test-plugin' => array(
-						'Plugin Name' => 'Test Plugin',
+						'Plugin Name'      => 'Test Plugin',
 						'Requires Plugins' => 'hello-dolly, woocommerce',
 					),
 				),
-				'expected' => array(
+				'expected'     => array(
 					'RequiresPlugins' => 'hello-dolly, woocommerce',
 				),
 			),
 			'two dependencies in reverse alphabetical order' => array(
 				'plugins_data' => array(
 					'test-plugin' => array(
-						'Plugin Name' => 'Test Plugin',
+						'Plugin Name'      => 'Test Plugin',
 						'Requires Plugins' => 'woocommerce, hello-dolly',
 					),
 				),
-				'expected' => array(
+				'expected'     => array(
 					'RequiresPlugins' => 'woocommerce, hello-dolly',
 				),
 			),
 			'two dependencies with a space'          => array(
 				'plugins_data' => array(
 					'test-plugin' => array(
-						'Plugin Name' => 'Test Plugin',
+						'Plugin Name'      => 'Test Plugin',
 						'Requires Plugins' => 'hello-dolly , woocommerce',
 					),
 				),
-				'expected' => array(
+				'expected'     => array(
 					'RequiresPlugins' => 'hello-dolly , woocommerce',
 				),
 			),
 			'a repeated dependency'                  => array(
 				'plugins_data' => array(
 					'test-plugin' => array(
-						'Plugin Name' => 'Test Plugin',
+						'Plugin Name'      => 'Test Plugin',
 						'Requires Plugins' => 'hello-dolly, woocommerce, hello-dolly',
 					),
 				),
-				'expected' => array(
+				'expected'     => array(
 					'RequiresPlugins' => 'hello-dolly, woocommerce, hello-dolly',
 				),
 			),
 			'a dependency with an underscore'        => array(
 				'plugins_data' => array(
 					'test-plugin' => array(
-						'Plugin Name' => 'Test Plugin',
+						'Plugin Name'      => 'Test Plugin',
 						'Requires Plugins' => 'hello_dolly',
 					),
 				),
-				'expected' => array( 'RequiresPlugins' => 'hello_dolly' ),
+				'expected'     => array( 'RequiresPlugins' => 'hello_dolly' ),
 			),
 			'a dependency with a space'              => array(
 				'plugins_data' => array(
 					'test-plugin' => array(
-						'Plugin Name' => 'Test Plugin',
+						'Plugin Name'      => 'Test Plugin',
 						'Requires Plugins' => 'hello dolly',
 					),
 				),
-				'expected' => array( 'RequiresPlugins' => 'hello dolly' ),
+				'expected'     => array( 'RequiresPlugins' => 'hello dolly' ),
 			),
 			'a dependency in quotes'                 => array(
 				'plugins_data' => array(
 					'test-plugin' => array(
-						'Plugin Name' => 'Test Plugin',
+						'Plugin Name'      => 'Test Plugin',
 						'Requires Plugins' => '"hello-dolly"',
 					),
 				),
-				'expected' => array( 'RequiresPlugins' => '"hello-dolly"' ),
+				'expected'     => array( 'RequiresPlugins' => '"hello-dolly"' ),
 			),
 			'two dependencies in quotes'             => array(
 				'plugins_data' => array(
 					'test-plugin' => array(
-						'Plugin Name' => 'Test Plugin',
+						'Plugin Name'      => 'Test Plugin',
 						'Requires Plugins' => '"hello-dolly, woocommerce"',
 					),
 				),
-				'expected' => array( 'RequiresPlugins' => '"hello-dolly, woocommerce"' ),
+				'expected'     => array( 'RequiresPlugins' => '"hello-dolly, woocommerce"' ),
 			),
 		);
 	}
