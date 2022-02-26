@@ -245,7 +245,7 @@ class WP_Plugin_Dependencies {
 		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data', array() );
 		foreach ( $this->slugs as $key => $slug ) {
 			// Don't hit plugins API if data exists.
-			if ( array_key_exists( $slug, $this->plugin_data ) ) {
+			if ( array_key_exists( $slug, (array) $this->plugin_data ) ) {
 				continue;
 			}
 			if ( ! function_exists( 'plugins_api' ) ) {
