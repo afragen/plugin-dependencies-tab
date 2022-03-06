@@ -63,11 +63,16 @@ class WP_Plugin_Dependencies {
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
+			add_action(
+				'plugins_loaded',
+				function() {
+					$this->get_dot_org_data();
+				}
+			);
 
 			// $start            = microtime( true );
 			$required_headers = $this->parse_headers();
 			$this->slugs      = $this->sanitize_required_headers( $required_headers );
-			$this->get_dot_org_data();
 			$this->deactivate_unmet_dependencies();
 			// error_log( 'Plugin dependency time: ' . number_format( ( microtime( true ) - $start ), 6 ) );
 		}
