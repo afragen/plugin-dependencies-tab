@@ -226,8 +226,11 @@ class WP_Plugin_Dependencies {
 		$dependency_paths = $this->get_dependency_filepaths();
 		foreach ( $dependency_paths as $plugin_file ) {
 			if ( $plugin_file ) {
-				$this->modify_plugin_row( $plugin_file );
+				$this->modify_dependency_plugin_row( $plugin_file );
 			}
+		}
+		foreach ( array_keys( $this->requires_plugins ) as $plugin_file ) {
+			$this->modify_requires_plugin_row( $plugin_file );
 		}
 	}
 
@@ -237,7 +240,8 @@ class WP_Plugin_Dependencies {
 	 */
 	public function get_dot_org_data() {
 		global $pagenow;
-		if ( 'plugin-install.php' !== $pagenow ) {
+		$pages = array( 'plugin-install.php', 'plugins.php' );
+		if ( ! in_array( $pagenow, $pages, true ) ) {
 			return;
 		}
 
@@ -282,14 +286,25 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
-	 * Actually make modifications to plugin row.
+	 * Actually make modifications to plugin row of plugin dependencies.
 	 *
 	 * @param string $plugin_file Plugin file.
 	 */
-	public function modify_plugin_row( $plugin_file ) {
+	public function modify_dependency_plugin_row( $plugin_file ) {
 		add_filter( 'network_admin_plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
 		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
 		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements' ), 10, 2 );
+	}
+
+	/**
+	 * Actually make modifications to plugin row of requiring plugin.
+	 *
+	 * @param string $plugin_file Plugin file.
+	 *
+	 * @return void
+	 */
+	public function modify_requires_plugin_row( $plugin_file ) {
+		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements_requires' ), 10, 1 );
 	}
 
 	/**
@@ -331,6 +346,26 @@ class WP_Plugin_Dependencies {
 		print '<script>';
 		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $this->get_dependency_sources( $plugin_data ) ) . '");';
 		print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
+		print '</script>';
+	}
+
+	/**
+	 * Modify the plugin row elements.
+	 * Add `Requires: ...` information
+	 *
+	 * @param string $plugin_file Plugin file.
+	 *
+	 * @return void
+	 */
+	public function modify_plugin_row_elements_requires( $plugin_file ) {
+		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
+		$requires          = $this->plugins[ $plugin_file ]['RequiresPlugins'];
+		foreach ( $requires as $require ) {
+			$names[] = $this->plugin_data[ $require ]['name'];
+		}
+		$names = implode( ', ', $names );
+		print '<script>';
+		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . esc_html( $names ) . '");';
 		print '</script>';
 	}
 
