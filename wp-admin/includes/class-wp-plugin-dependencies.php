@@ -63,12 +63,9 @@ class WP_Plugin_Dependencies {
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
-			add_action(
-				'plugins_loaded',
-				function() {
-					$this->get_dot_org_data();
-				}
-			);
+
+			// TODO: $this->get_dot_org_data() for core PR.
+			add_action( 'plugins_loaded', array( $this, 'get_dot_org_data' ) );
 
 			// $start            = microtime( true );
 			$required_headers = $this->parse_headers();
