@@ -16,7 +16,7 @@
  * Version: 0.11.6.4
  * License: MIT
  * Network: true
- * Requires at least: 5.1
+ * Requires at least: 5.2
  * Requires PHP: 5.6
  * GitHub Plugin URI: afragen/plugin-dependencies-tab
  */
