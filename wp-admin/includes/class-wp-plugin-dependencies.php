@@ -375,7 +375,7 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
-	 * Display admin notices if dependencies not installed.
+	 * Display admin notice if dependencies not installed.
 	 *
 	 * @return void
 	 */
