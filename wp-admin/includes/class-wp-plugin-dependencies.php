@@ -366,12 +366,16 @@ class WP_Plugin_Dependencies {
 
 		$requires = $this->plugins[ $plugin_file ]['RequiresPlugins'];
 		foreach ( $requires as $require ) {
-			$names[] = $this->plugin_data[ $require ]['name'];
+			if ( isset( $this->plugin_data[ $require ] ) ) {
+				$names[] = $this->plugin_data[ $require ]['name'];
+			}
 		}
-		$names = implode( ', ', $names );
-		print '<script>';
-		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . esc_html( $names ) . '");';
-		print '</script>';
+		if ( ! empty( $names ) ) {
+			$names = implode( ', ', $names );
+			print '<script>';
+			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . esc_html( $names ) . '");';
+			print '</script>';
+		}
 	}
 
 	/**
@@ -406,7 +410,7 @@ class WP_Plugin_Dependencies {
 				printf(
 					'<div class="notice-warning notice is-dismissible"><p>'
 					/* translators: 1: opening tag and link to Dependencies install page, 2:closing tag */
-					. esc_html__( 'There are additional plugins that must be installed. Go to the%1$sDependencies%2$s install page.' )
+					. esc_html__( 'There are additional plugins that must be installed. Go to the %1$sDependencies%2$s install page.' )
 					. '</p></div>',
 					'<a href=' . esc_url_raw( admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 					'</a>'
