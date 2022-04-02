@@ -4,7 +4,7 @@
  *
  * @package WordPress
  * @subpackage Administration
- * @since 6.0.0
+ * @since 6.1.0
  */
 
 /**
@@ -244,7 +244,8 @@ class WP_Plugin_Dependencies {
 			return;
 		}
 
-		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
+		$this->plugin_data = (array) get_site_transient( 'wp_plugin_dependencies_plugin_data' );
+
 		foreach ( $this->slugs as $key => $slug ) {
 			// Don't hit plugins API if data exists.
 			if ( array_key_exists( $slug, (array) $this->plugin_data ) ) {
@@ -358,7 +359,13 @@ class WP_Plugin_Dependencies {
 	 */
 	public function modify_plugin_row_elements_requires( $plugin_file ) {
 		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
-		$requires          = $this->plugins[ $plugin_file ]['RequiresPlugins'];
+
+		// Exit if no plugin data found.
+		if ( empty( $this->plugin_data ) ) {
+			return;
+		}
+
+		$requires = $this->plugins[ $plugin_file ]['RequiresPlugins'];
 		foreach ( $requires as $require ) {
 			$names[] = $this->plugin_data[ $require ]['name'];
 		}
