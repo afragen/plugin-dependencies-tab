@@ -12,7 +12,7 @@
 
 ## Descripton
 
-Parses a 'Requires Plugins' header and adds a Dependencies tab in the plugin install page.
+Parses a 'Requires Plugins' header and adds a Dependencies tab in the plugin install page. If a requiring plugin does not have all it's dependencies installed and active, it will not activate.
 
 My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #1724](https://github.com/WordPress/wordpress-develop/pull/1724)
 
