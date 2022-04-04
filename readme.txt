@@ -2,7 +2,7 @@
 
 Plugin Name: Plugin Dependencies Tab
 Plugin URI: https://github.com/afragen/plugin-dependencies-tab
-Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
+Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
 Author: Andy Fragen
 License: MIT
 Network: true
@@ -11,9 +11,11 @@ Requires PHP: 5.6
 Tested up to: 6.0
 Stable tag: master
 
-Parses 'Requires Plugin' header and adds Plugins > Add New > Dependencies view/tab.
+Parses 'Requires Plugins' header and adds Plugins > Add New > Dependencies view/tab.
 
 ## Descripton
+
+Parses a 'Requires Plugins' header and adds a Dependencies tab in the plugin install page.
 
 My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #1724](https://github.com/WordPress/wordpress-develop/pull/1724)
 
