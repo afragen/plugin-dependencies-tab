@@ -1,6 +1,6 @@
 {
   "name": "afragen/plugin-dependencies-tab",
-  "description": "Add Bitbucket repositories to GitHub Updater that lack actual GitHub Updater headers.",
+  "description": "Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.",
   "type": "wordpress-plugin",
   "license": "MIT",
   "authors": [
