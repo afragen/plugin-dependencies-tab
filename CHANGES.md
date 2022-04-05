@@ -1,4 +1,6 @@
 [unreleased]
+* harden a bit
+* clean up some testing stuff
 
 #### 0.12.0 / 2022-04-03
 * readme.txt

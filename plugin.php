@@ -13,7 +13,7 @@
  * Plugin URI: https://github.com/afragen/plugin-dependencies-tab
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen
- * Version: 0.12.0
+ * Version: 0.12.1
  * License: MIT
  * Network: true
  * Requires at least: 5.2
@@ -22,6 +22,14 @@
  */
 
 namespace Fragen\Plugin_Dependencies;
+
+/*
+ * Exit if called directly.
+ * PHP version check and exit.
+ */
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
 
 /**
  * Class Init
