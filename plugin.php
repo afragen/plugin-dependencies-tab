@@ -21,7 +21,7 @@
  * GitHub Plugin URI: afragen/plugin-dependencies-tab
  */
 
-namespace Fragen\Plugin_Dependencies;
+namespace Fragen\WP_Plugin_Dependencies;
 
 /*
  * Exit if called directly.
