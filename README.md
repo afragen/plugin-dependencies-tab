@@ -25,10 +25,3 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 * Messaging in the plugin row description is inserted; as is data noting which plugins require the dependency.
 
 * Ensures that plugins with unmet dependencies cannot be activated.
-
-## Need to add to core
-
-Some of the messaging is too difficult to display without directly modifying core.
-
-* Add filter hook after wp-admin/includes/class-wp-plugin-install-list-table.php:516
-  * `$description = apply_filters( 'plugin_install_description', $description, $plugin );`

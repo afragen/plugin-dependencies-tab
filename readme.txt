@@ -26,13 +26,6 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 * Displays a single admin notice with link to **Plugins > Add New > Dependencies** if not all plugin dependencies have been installed.
 * Ensures that plugins with unmet dependencies cannot be activated.
 
-## Need to add to core
-
-Some of the messaging is too difficult to display without directly modifying core.
-
-* Add filter hook after wp-admin/includes/class-wp-plugin-install-list-table.php:516
-  * `$description = apply_filters( 'plugin_install_description', $description, $plugin );`
-
 ## Screenshots
 
 1. Plugins page

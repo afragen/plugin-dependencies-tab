@@ -1,6 +1,9 @@
 [unreleased]
+
+#### 0.12.2 / 2022-04-06
 * harden a bit
 * clean up some testing stuff
+* `plugin_install_description` filter committed to core
 
 #### 0.12.0 / 2022-04-03
 * readme.txt
