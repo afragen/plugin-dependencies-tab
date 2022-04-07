@@ -284,31 +284,6 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
-	 * Unset plugin action links so required plugins can't be removed or deactivated.
-	 * Only when the requiring plugin is active.
-	 *
-	 * @param array  $actions     Action links.
-	 * @param string $plugin_file Plugin file.
-	 *
-	 * @return array
-	 */
-	public function unset_action_links( $actions, $plugin_file ) {
-		foreach ( $this->requires_plugins as $plugin => $requires ) {
-			$dependents = explode( ',', $requires['RequiresPlugins'] );
-			if ( is_plugin_active( $plugin ) && in_array( dirname( $plugin_file ), $dependents, true ) ) {
-				if ( isset( $actions['delete'] ) ) {
-					unset( $actions['delete'] );
-				}
-				if ( isset( $actions['deactivate'] ) ) {
-					unset( $actions['deactivate'] );
-				}
-			}
-		}
-
-		return $actions;
-	}
-
-	/**
 	 * Modify the plugin row elements.
 	 * Removes plugin row checkbox.
 	 * Adds 'Required by: ...' information.
@@ -353,6 +328,31 @@ class WP_Plugin_Dependencies {
 			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . esc_html( $names ) . '");';
 			print '</script>';
 		}
+	}
+
+	/**
+	 * Unset plugin action links so required plugins can't be removed or deactivated.
+	 * Only when the requiring plugin is active.
+	 *
+	 * @param array  $actions     Action links.
+	 * @param string $plugin_file Plugin file.
+	 *
+	 * @return array
+	 */
+	public function unset_action_links( $actions, $plugin_file ) {
+		foreach ( $this->requires_plugins as $plugin => $requires ) {
+			$dependents = explode( ',', $requires['RequiresPlugins'] );
+			if ( is_plugin_active( $plugin ) && in_array( dirname( $plugin_file ), $dependents, true ) ) {
+				if ( isset( $actions['delete'] ) ) {
+					unset( $actions['delete'] );
+				}
+				if ( isset( $actions['deactivate'] ) ) {
+					unset( $actions['deactivate'] );
+				}
+			}
+		}
+
+		return $actions;
 	}
 
 	/**
