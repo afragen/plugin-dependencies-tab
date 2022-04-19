@@ -219,7 +219,7 @@ class WP_Plugin_Dependencies {
 			$response = plugins_api( 'plugin_information', $args );
 
 			// If a proper slug is present but has no plugin data, generic data will be returned.
-			$response = $this->get_empty_plugins_api_result( $response, $args );
+			$response = $this->get_empty_plugins_api_response( $response, $args );
 
 			if ( is_wp_error( $response ) ) {
 				continue;
@@ -475,7 +475,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return \stdClass
 	 */
-	public function get_empty_plugins_api_result( $response, $args ) {
+	public function get_empty_plugins_api_response( $response, $args ) {
 		if ( is_wp_error( $response ) ) {
 			$response = array(
 				'name'              => $args['slug'],
