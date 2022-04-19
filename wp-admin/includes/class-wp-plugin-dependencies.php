@@ -203,6 +203,7 @@ class WP_Plugin_Dependencies {
 		foreach ( $this->slugs as $key => $slug ) {
 			// Don't hit plugins API if data exists.
 			if ( array_key_exists( $slug, (array) $this->plugin_data ) ) {
+				add_action( 'in_admin_header', array( $this, 'hide_action_links' ) );
 				continue;
 			}
 			if ( ! function_exists( 'plugins_api' ) ) {
@@ -394,9 +395,9 @@ class WP_Plugin_Dependencies {
 			$deactivated_plugins = implode( ', ', $deactivated_plugins );
 			printf(
 				'<div class="notice-error notice is-dismissible"><p>'
-				/* translators: 1: plugin names, 2: opening tag and link to Dependencies install page, 3: closing tag */
-				. esc_html__( '%1$s plugin(s) could not be activated. There are uninstalled or inactive dependencies. Go to the %2$sDependencies%3$s install page.' )
-				. '</p></div>',
+					/* translators: 1: plugin names, 2: opening tag and link to Dependencies install page, 3: closing tag */
+					. esc_html__( '%1$s plugin(s) could not be activated. There are uninstalled or inactive dependencies. Go to the %2$sDependencies%3$s install page.' )
+					. '</p></div>',
 				'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
 				'<a href=' . esc_url_raw( admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 				'</a>'
@@ -409,9 +410,9 @@ class WP_Plugin_Dependencies {
 			if ( $intersect !== $this->slugs ) {
 				printf(
 					'<div class="notice-warning notice is-dismissible"><p>'
-					/* translators: 1: opening tag and link to Dependencies install page, 2:closing tag */
-					. esc_html__( 'There are additional plugins that must be installed. Go to the %1$sDependencies%2$s install page.' )
-					. '</p></div>',
+						/* translators: 1: opening tag and link to Dependencies install page, 2:closing tag */
+						. esc_html__( 'There are additional plugins that must be installed. Go to the %1$sDependencies%2$s install page.' )
+						. '</p></div>',
 					'<a href=' . esc_url_raw( admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 					'</a>'
 				);
@@ -499,6 +500,19 @@ class WP_Plugin_Dependencies {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Hide plugin card action links for plugins with no API data.
+	 *
+	 * @return string
+	 */
+	public function hide_action_links() {
+		foreach ( $this->plugin_data as $plugin_data ) {
+			if ( empty( $plugin_data['version'] ) ) {
+				return printf( '<style>.plugin-card-%s .action-links { display:none; }</style>', esc_attr( $plugin_data['slug'] ) );
+			}
+		}
 	}
 }
 
