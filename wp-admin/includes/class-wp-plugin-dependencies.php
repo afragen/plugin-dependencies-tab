@@ -487,7 +487,7 @@ class WP_Plugin_Dependencies {
 				'tested'            => '',
 				'requires_php'      => '',
 				'sections'          => array( 'description' => '' ),
-				'short_description' => __( 'This plugin has no API data. Please contact the plugin developer to ask them for plugin dependency compatibility.' ),
+				'short_description' => __( 'This plugin has no API data. Please contact the plugin developer and ask them to integrate with plugin dependencies.' ),
 				'download_link'     => '',
 				'banners'           => array(),
 				'icons'             => array( 'default' => "https://s.w.org/plugins/geopattern-icon/{$args['slug']}.svg" ),
