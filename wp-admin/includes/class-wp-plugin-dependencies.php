@@ -511,7 +511,7 @@ class WP_Plugin_Dependencies {
 		$hide_selectors = array();
 		foreach ( $this->plugin_data as $plugin_data ) {
 			if ( empty( $plugin_data['version'] ) ) {
-				$hide_selectors[] = sprintf( '.plugin-card-%s .action-links', $plugin_data['slug'] );
+				$hide_selectors[] = sprintf( '.plugin-card-%1$s .action-links, .plugin-card-%1$s .plugin-card-bottom', $plugin_data['slug'] );
 			}
 		}
 		if ( ! empty( $hide_selectors ) ) {
