@@ -508,14 +508,14 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function hide_action_links() {
-		$css_hide = array();
+		$hide_selectors = array();
 		foreach ( $this->plugin_data as $plugin_data ) {
 			if ( empty( $plugin_data['version'] ) ) {
-				$css_hide[] = sprintf( '.plugin-card-%s .action-links', $plugin_data['slug'] );
+				$hide_selectors[] = sprintf( '.plugin-card-%s .action-links', $plugin_data['slug'] );
 			}
 		}
-		$css_hide = implode( ', ', $css_hide );
-		printf( '<style>%s { display: none; }</style>', esc_attr( $css_hide ) );
+		$hide_selectors = implode( ', ', $hide_selectors );
+		printf( '<style>%s { display: none; }</style>', esc_attr( $hide_selectors ) );
 	}
 }
 
