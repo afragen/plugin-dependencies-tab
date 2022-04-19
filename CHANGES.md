@@ -1,4 +1,5 @@
 [unreleased]
+* add plugin cards for slugs with no API data
 
 #### 0.12.3
 *rename and reschuffle some functions

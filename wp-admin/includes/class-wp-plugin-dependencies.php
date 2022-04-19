@@ -216,6 +216,10 @@ class WP_Plugin_Dependencies {
 				),
 			);
 			$response = plugins_api( 'plugin_information', $args );
+
+			// If a proper slug is present but has no plugin data, generic data will be returned.
+			$response = $this->get_empty_plugins_api_result( $response, $args );
+
 			if ( is_wp_error( $response ) ) {
 				continue;
 			}
@@ -460,6 +464,41 @@ class WP_Plugin_Dependencies {
 		$sources = implode( ', ', $sources );
 
 		return $sources;
+	}
+
+	/**
+	 * Return empty plugins_api() response.
+	 *
+	 * @param \stdClass|WP_Error $response Response from plugins_api().
+	 * @param array              $args     Array of arguments passed to plugins_api().
+	 *
+	 * @return \stdClass
+	 */
+	public function get_empty_plugins_api_result( $response, $args ) {
+		if ( is_wp_error( $response ) ) {
+			$response = array(
+				'name'              => $args['slug'],
+				'slug'              => $args['slug'],
+				'version'           => '',
+				'author'            => '',
+				'contributors'      => '',
+				'requires'          => '',
+				'tested'            => '',
+				'requires_php'      => '',
+				'sections'          => array( 'description' => '' ),
+				'short_description' => __( 'This plugin has no API data. Please contact the plugin developer to ask them for plugin dependency compatibility.' ),
+				'download_link'     => '',
+				'banners'           => array(),
+				'icons'             => array( 'default' => "https://s.w.org/plugins/geopattern-icon/{$args['slug']}.svg" ),
+				'last_updated'      => '',
+				'num_ratings'       => 0,
+				'rating'            => 0,
+				'active_installs'   => 0,
+			);
+			$response = (object) $response;
+		}
+
+		return $response;
 	}
 }
 
