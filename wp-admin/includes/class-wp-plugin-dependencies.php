@@ -514,8 +514,10 @@ class WP_Plugin_Dependencies {
 				$hide_selectors[] = sprintf( '.plugin-card-%s .action-links', $plugin_data['slug'] );
 			}
 		}
-		$hide_selectors = implode( ', ', $hide_selectors );
-		printf( '<style>%s { display: none; }</style>', esc_attr( $hide_selectors ) );
+		if ( ! empty( $hide_selectors ) ) {
+			$hide_selectors = implode( ', ', $hide_selectors );
+			printf( '<style>%s { display: none; }</style>', esc_attr( $hide_selectors ) );
+		}
 	}
 }
 
