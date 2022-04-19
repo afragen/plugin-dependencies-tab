@@ -505,14 +505,17 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Hide plugin card action links for plugins with no API data.
 	 *
-	 * @return string
+	 * @return void
 	 */
 	public function hide_action_links() {
+		$css_hide = array();
 		foreach ( $this->plugin_data as $plugin_data ) {
 			if ( empty( $plugin_data['version'] ) ) {
-				return printf( '<style>.plugin-card-%s .action-links { display:none; }</style>', esc_attr( $plugin_data['slug'] ) );
+				$css_hide[] = sprintf( '.plugin-card-%s .action-links', $plugin_data['slug'] );
 			}
 		}
+		$css_hide = implode( ', ', $css_hide );
+		printf( '<style>%s { display: none; }</style>', esc_attr( $css_hide ) );
 	}
 }
 
