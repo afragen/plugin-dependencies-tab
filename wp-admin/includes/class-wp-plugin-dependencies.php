@@ -63,6 +63,7 @@ class WP_Plugin_Dependencies {
 			add_action( 'admin_init', array( $this, 'modify_plugin_row' ) );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
+			add_action( 'in_admin_header', array( $this, 'hide_action_links' ) );
 
 			// TODO: $this->get_dot_org_data() for core PR.
 			add_action( 'plugins_loaded', array( $this, 'get_dot_org_data' ) );
@@ -203,7 +204,6 @@ class WP_Plugin_Dependencies {
 		foreach ( $this->slugs as $key => $slug ) {
 			// Don't hit plugins API if data exists.
 			if ( array_key_exists( $slug, (array) $this->plugin_data ) ) {
-				add_action( 'in_admin_header', array( $this, 'hide_action_links' ) );
 				continue;
 			}
 			if ( ! function_exists( 'plugins_api' ) ) {
