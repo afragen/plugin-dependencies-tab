@@ -451,9 +451,12 @@ class WP_Plugin_Dependencies {
 	 */
 	private function get_dependency_sources( $plugin_data ) {
 		$sources = array();
+		if ( ! isset( $plugin_data['slug'] ) ) {
+			return __( 'Data unavailable' );
+		}
 		foreach ( $this->plugins as $plugin ) {
 			if ( ! empty( $plugin['RequiresPlugins'] ) ) {
-				if ( isset( $plugin_data['slug'] ) && in_array( $plugin_data['slug'], $plugin['RequiresPlugins'], true ) ) {
+				if ( in_array( $plugin_data['slug'], $plugin['RequiresPlugins'], true ) ) {
 					$sources[] = $plugin['Name'];
 				}
 			}
