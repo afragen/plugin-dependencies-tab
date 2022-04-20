@@ -453,10 +453,8 @@ class WP_Plugin_Dependencies {
 		$sources = array();
 		foreach ( $this->plugins as $plugin ) {
 			if ( ! empty( $plugin['RequiresPlugins'] ) ) {
-				foreach ( $plugin['RequiresPlugins'] as $dependent ) {
-					if ( in_array( $plugin_data['slug'], $plugin['RequiresPlugins'], true ) ) {
-						$sources[] = $plugin['Name'];
-					}
+				if ( isset( $plugin_data['slug'] ) && in_array( $plugin_data['slug'], $plugin['RequiresPlugins'], true ) ) {
+					$sources[] = $plugin['Name'];
 				}
 			}
 		}
