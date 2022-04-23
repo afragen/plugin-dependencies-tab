@@ -1,5 +1,5 @@
 {
-  "name": "afragen/plugin-dependencies-tab",
+  "name": "wordpress/wp-plugin-dependencies",
   "description": "Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.",
   "type": "wordpress-plugin",
   "license": "MIT",
@@ -12,8 +12,8 @@
     }
   ],
   "support": {
-    "issues": "https://github.com/afragen/plugin-dependencies-tab/issues",
-    "source": "https://github.com/afragen/plugin-dependencies-tab"
+    "issues": "https://github.com/WordPress/wp-plugin-dependencies/issues",
+    "source": "https://github.com/WordPress/wp-plugin-dependencies"
   },
   "prefer-stable": true,
   "require": {

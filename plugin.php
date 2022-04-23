@@ -1,27 +1,28 @@
 <?php
 /**
- * Plugin Dependencies Tab
+ * Plugin Dependencies
  *
  * @author  Andy Fragen
  * @license MIT
- * @link    https://github.com/afragen/plugin-dependencies-tab
- * @package plugin-dependencies-tab
+ * @link    https://github.com/WordPress/wp-plugin-dependencies
+ * @package wp-plugin-dependencies
  */
 
 /**
- * Plugin Name: Plugin Dependencies Tab
- * Plugin URI: https://github.com/afragen/plugin-dependencies-tab
+ * Plugin Name: Plugin Dependencies
+ * Plugin URI:  https://github.com/WordPress/wp-plugin-dependencies
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen
- * Version: 0.12.9
+ * Version: 0.13.0
  * License: MIT
  * Network: true
  * Requires at least: 5.2
  * Requires PHP: 5.6
- * GitHub Plugin URI: afragen/plugin-dependencies-tab
+ * GitHub Plugin URI: WordPress/wp-plugin-dependencies
+ * Primary Branch: trunk
  */
 
-namespace Fragen\WP_Plugin_Dependencies;
+namespace WP_Plugin_Dependencies;
 
 /*
  * Exit if called directly.

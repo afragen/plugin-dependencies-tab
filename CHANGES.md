@@ -1,6 +1,9 @@
 [unreleased]
+
+#### 0.13.0
 * add plugin cards for slugs with no API data
 * hide action links and bottom of card in plugin cards for slugs with no API data
+* switch to WordPress/wp-plugin-dependencies
 
 #### 0.12.3
 *rename and reschuffle some functions

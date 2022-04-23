@@ -1,6 +1,6 @@
-# Plugin Dependencies Tab
+# Plugin Dependencies
 
- * Plugin Name: Plugin Dependencies Tab
+ * Plugin Name: Plugin Dependencies
  * Plugin URI: https://github.com/afragen/plugin-dependencies-tab
  * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen
@@ -23,5 +23,6 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 * In the plugins page, a dependent plugin is unable to be deleted or deactivated if the requiring plugin is active.
 * Plugin dependencies can be deactivated or deleted if the requiring plugin is not active.
 * Messaging in the plugin row description is inserted; as is data noting which plugins require the dependency.
+* If the dependency API data is not available a generic plugin card will be displayed in the Dependencies tab.
 
 * Ensures that plugins with unmet dependencies cannot be activated.

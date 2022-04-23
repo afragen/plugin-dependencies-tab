@@ -1,6 +1,6 @@
-# Plugin Dependencies Tab
+# Plugin Dependencies
 
-Plugin Name: Plugin Dependencies Tab
+Plugin Name: Plugin Dependencies
 Plugin URI: https://github.com/afragen/plugin-dependencies-tab
 Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
 Author: Andy Fragen
@@ -9,7 +9,7 @@ Network: true
 Requires at least: 5.2
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: master
+Stable tag: trunk
 
 ## Descripton
 
@@ -25,8 +25,11 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 * Messaging in the plugin row description is inserted; as is data noting which plugins require the dependency.
 * Displays a single admin notice with link to **Plugins > Add New > Dependencies** if not all plugin dependencies have been installed.
 * Ensures that plugins with unmet dependencies cannot be activated.
+* If the dependency API data is not available a generic plugin card will be displayed in the Dependencies tab.
 
 ## Screenshots
 
 1. Plugins page
 2. Plugin Dependencies tab
+
+## Changelog
