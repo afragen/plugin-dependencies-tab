@@ -1,3 +1,5 @@
+# Code now at https://github.com/WordPress/wp-plugin-dependencies
+
 # Plugin Dependencies
 
  * Plugin Name: Plugin Dependencies
